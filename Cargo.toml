@@ -1,0 +1,17 @@
+[package]
+name = "axum-backend-prject"
+version = "0.1.0"
+edition = "2024"
+authors = ["Mahmoud Khaled Khera"]
+description = "aut backend using axum"
+repository="https://github.com/mahmoudkhera/axum-backend-project.git"
+readme = "README.md"
+
+[dependencies]
+tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros"] }
+axum="0.8.8"
+sqlx = { version = "0.7", features = [
+    "runtime-tokio-native-tls",
+    "postgres",
+    "macros"
+] }
