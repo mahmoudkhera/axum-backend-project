@@ -26,7 +26,7 @@ use chrono::{Duration, Utc};
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 
-use crate::error::{ErrorMessage, HttpError};
+use crate::errors::{ErrorMessage, HttpError};
 
 // JWT CLAIMS STRUCTURE
 
