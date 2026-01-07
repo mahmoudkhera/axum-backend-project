@@ -1,15 +1,14 @@
-use axum::{
-    Router,
-    http::{
-        HeaderValue, Method,
-        header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
-    },
+use std::sync::Arc;
+
+use axum::http::{
+    HeaderValue, Method,
+    header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
 };
 use dotenvy::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use tower_http::cors::CorsLayer;
 
-use crate::{config::Config, db_handler::DBClient};
+use crate::{config::Config, db_handler::DBClient, routes::create_router};
 
 #[derive(Debug, Clone)]
 pub struct AppState {
@@ -25,7 +24,7 @@ impl AppState {
     }
 }
 
-async fn app_init() {
+pub async fn app_init() {
     dotenv().ok();
 
     let config = Config::init();
@@ -55,7 +54,7 @@ async fn app_init() {
 
     let app_state = AppState::new(config.clone(), db_client);
 
-    let app = Router::new().layer(cors).with_state(app_state);
+    let app = create_router(Arc::new(app_state).clone()).layer(cors.clone());
 
     println!("server is running on http://localhost:{}", &config.port);
 

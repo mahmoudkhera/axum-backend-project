@@ -1,4 +1,6 @@
+use axum_backend_prject::app_start;
+
 #[tokio::main]
 async fn main() {
-    println!("hellow world ");
+    app_start::app_init().await;
 }

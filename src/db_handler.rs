@@ -51,6 +51,7 @@ pub trait UserExt {
     async fn get_user_by_id(&self, user_id: Uuid) -> Result<Option<User>, sqlx::Error>;
     async fn get_user_by_name(&self, name: &str) -> Result<Option<User>, sqlx::Error>;
     async fn get_user_by_email(&self, emial: &str) -> Result<Option<User>, sqlx::Error>;
+    async fn get_user_by_token(&self, token: &str) -> Result<Option<User>, sqlx::Error>;
 
     async fn get_users(&self, page: u32, limit: usize) -> Result<Vec<User>, sqlx::Error>;
 
@@ -126,7 +127,7 @@ impl UserExt for DBClient {
         .fetch_optional(&self.pool)
         .await;
     }
-    async fn get_user_by_name(&self, name: &str) -> Result<Option<User>, sqlx::Error> {
+    async fn get_user_by_name(&self, token: &str) -> Result<Option<User>, sqlx::Error> {
         // Prioritize lookup by different fields
 
         return sqlx::query_as!(
@@ -135,9 +136,26 @@ impl UserExt for DBClient {
             SELECT id, name, email, password, verified, created_at, updated_at,
                    verification_token, token_expires_at, role as "role: UserRole"
             FROM users
-            WHERE name = $1
+            WHERE verification_token = $1
             "#,
-            name
+            token
+        )
+        .fetch_optional(&self.pool)
+        .await;
+    }
+
+    async fn get_user_by_token(&self, token: &str) -> Result<Option<User>, sqlx::Error> {
+        // Prioritize lookup by different fields
+
+        return sqlx::query_as!(
+            User,
+            r#"
+            SELECT id, name, email, password, verified, created_at, updated_at,
+                   verification_token, token_expires_at, role as "role: UserRole"
+            FROM users
+            WHERE verification_token = $1
+            "#,
+            token
         )
         .fetch_optional(&self.pool)
         .await;

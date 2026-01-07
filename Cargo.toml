@@ -8,9 +8,11 @@ repository="https://github.com/mahmoudkhera/axum-backend-project.git"
 readme = "README.md"
 
 [dependencies]
-tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros"] }
+tokio = { version = "1.49.0", features = ["fs","rt-multi-thread", "macros"] }
 axum="0.8.8"
 axum-extra = { version = "0.12.5", features = ["cookie"]}
+time = "0.3"
+
 
 
 sqlx = { version = "0.7", features = [
@@ -44,6 +46,8 @@ tower-http = { version = "0.6.8", features = ["cors","trace"] }
 argon2 = "0.5.3"
 
 jsonwebtoken="9"
+
+lettre = { version = "0.11", features = ["tokio1-native-tls"]}
 
 
 
